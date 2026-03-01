@@ -6,7 +6,13 @@ import { BRAND_COLORS, FONT_FAMILIES } from '@carousel/shared';
 import { getImagenService, type GeneratedImage } from './imagen.service.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const FONTS_DIR = path.resolve(__dirname, '../../../../fonts');
+// In Docker, WORKDIR=/app and fonts are at /app/fonts
+// __dirname resolves to /app/apps/api/dist/services -> ../../../../fonts = /app/fonts
+// Fallback to process.cwd()/fonts if __dirname-based path doesn't exist
+import { existsSync } from 'fs';
+const FONTS_DIR_RELATIVE = path.resolve(__dirname, '../../../../fonts');
+const FONTS_DIR_CWD = path.resolve(process.cwd(), 'fonts');
+const FONTS_DIR = existsSync(FONTS_DIR_RELATIVE) ? FONTS_DIR_RELATIVE : FONTS_DIR_CWD;
 
 // ─── Font registration (run once at module load) ───────────────────────────────
 
