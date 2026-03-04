@@ -238,7 +238,7 @@ export default function DashboardPage() {
     const state = location.state as { validated?: string } | null;
     if (state?.validated) {
       addToast('Textos validados com sucesso!', 'success');
-      navigate('/', { replace: true, state: null });
+      navigate('/app/social-media', { replace: true, state: null });
     }
   }, [location.state, navigate, addToast]);
 
@@ -340,7 +340,7 @@ export default function DashboardPage() {
               {total === 0 ? 'Nenhum carrossel criado ainda' : `${total} carrossel${total !== 1 ? 'is' : ''}`}
             </p>
           </div>
-          <Button variant="primary" onClick={() => navigate('/new')}>
+          <Button variant="primary" onClick={() => navigate('/app/social-media/new')}>
             + Novo Carrossel
           </Button>
         </div>
@@ -404,7 +404,7 @@ export default function DashboardPage() {
                 : 'Comece criando um carrossel para o Instagram'}
             </p>
             {!search && !statusFilter && (
-              <Button variant="primary" size="lg" onClick={() => navigate('/new')}>
+              <Button variant="primary" size="lg" onClick={() => navigate('/app/social-media/new')}>
                 Criar Carrossel
               </Button>
             )}
@@ -419,7 +419,7 @@ export default function DashboardPage() {
                 <CarouselCard
                   key={c.id}
                   carousel={c}
-                  onEdit={(id) => navigate(`/carousel/${id}`)}
+                  onEdit={(id) => navigate(`/app/social-media/carousel/${id}`)}
                   onDuplicate={handleDuplicate}
                   onDelete={setDeletingCarousel}
                   duplicating={duplicatingId === c.id}

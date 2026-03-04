@@ -57,7 +57,7 @@ export default function TemplatesPage() {
             {Object.entries(TEMPLATE_TYPE_LABELS).map(([key, label]) => (
               <button
                 key={key}
-                onClick={() => navigate('/new')}
+                onClick={() => navigate('/app/social-media/new')}
                 className="text-left rounded-xl border border-brand-gray/20 bg-white/5 p-5 hover:border-brand-blue/40 hover:bg-brand-blue/5 transition-colors group"
               >
                 <p className="text-base font-subtitle text-white group-hover:text-brand-blue transition-colors">
@@ -110,7 +110,7 @@ export default function TemplatesPage() {
                   </CardHeader>
                   <CardContent>
                     <button
-                      onClick={() => navigate('/new')}
+                      onClick={() => navigate('/app/social-media/new')}
                       className="text-xs font-subtitle text-brand-blue hover:text-brand-blue/80 transition-colors"
                     >
                       Usar este template

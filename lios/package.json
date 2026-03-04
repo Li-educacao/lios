@@ -1,8 +1,8 @@
 {
-  "name": "carousel-creator",
-  "version": "1.0.0",
+  "name": "lios",
+  "version": "2.0.0",
   "private": true,
-  "description": "Instagram carousel creator for @lawhander (Climatrônico)",
+  "description": "LIOS — LI Operational System for LI Educação Online",
   "workspaces": [
     "apps/*",
     "packages/*"

@@ -25,18 +25,18 @@ export default function LoginPage() {
       return;
     }
 
-    navigate('/');
+    navigate('/app');
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-brand-black px-4">
-      <div className="w-full max-w-sm rounded-xl border border-brand-blue-dark bg-white/[0.02] p-8 space-y-6">
+    <div className="min-h-screen flex items-center justify-center bg-lios-black px-4">
+      <div className="w-full max-w-sm rounded-xl border border-lios-blue-dark bg-white/[0.02] p-8 space-y-6">
         {/* Brand header */}
         <div className="text-center space-y-1">
-          <h1 className="text-3xl font-heading text-brand-blue tracking-tight">
-            Carousel Creator
+          <h1 className="text-3xl font-heading text-lios-blue tracking-tight">
+            LIOS
           </h1>
-          <p className="text-sm font-subtitle text-brand-gray">
+          <p className="text-sm font-subtitle text-lios-gray-400">
             Acesse sua conta
           </p>
         </div>

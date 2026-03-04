@@ -808,7 +808,7 @@ export default function NewCarouselPage() {
         {/* Header */}
         <div className="mb-6">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/app/social-media')}
             className="text-brand-gray hover:text-white text-sm font-body transition-colors mb-4 flex items-center gap-1"
           >
             ← Voltar
@@ -1019,7 +1019,7 @@ export default function NewCarouselPage() {
                 size="lg"
                 onClick={async () => {
                   await markExported(carousel.id);
-                  navigate('/');
+                  navigate('/app/social-media');
                 }}
                 disabled={exporting}
               >

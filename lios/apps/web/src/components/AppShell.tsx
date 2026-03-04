@@ -4,7 +4,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { usePermissions } from '../hooks/usePermissions';
 import { cn } from '../lib/utils';
 import {
-  LayoutDashboard,
   Target,
   Palette,
   Image,
@@ -17,7 +16,6 @@ import {
   ChevronRight,
   LogOut,
   Menu,
-  X,
   Settings,
   Lock,
 } from 'lucide-react';

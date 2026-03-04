@@ -290,7 +290,7 @@ export default function FeedbackPage() {
                 <Button
                   variant="primary"
                   className="mt-4"
-                  onClick={() => navigate('/new')}
+                  onClick={() => navigate('/app/social-media/new')}
                 >
                   Criar Carrossel
                 </Button>
