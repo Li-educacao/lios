@@ -18,6 +18,10 @@ export const corsMiddleware = cors({
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
+    // Allow any localhost port for local development
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      return callback(null, true);
+    }
     // Allow any *.vercel.app subdomain for preview deploys
     if (origin.endsWith('.vercel.app')) {
       return callback(null, true);

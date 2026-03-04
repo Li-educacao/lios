@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { supabaseAdmin } from '../../../lib/supabase.js';
 import { BRAND_COLORS, FONT_FAMILIES } from '@carousel/shared';
-import { getImagenService, type GeneratedImage } from './imagen.service.js';
+import { getImagenService, type GeneratedImage, type SlideContext } from './imagen.service.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // In Docker, WORKDIR=/app and fonts are at /app/fonts
@@ -707,12 +707,19 @@ export async function renderCarouselById(carouselId: string): Promise<RenderResu
   const theme: string = (carousel as Record<string, unknown>)['theme'] as string ?? '';
   const totalSlides = slides.length;
 
+  // Build slide contexts so each image reflects its specific card text
+  const slideContexts: SlideContext[] = (slides as SlideData[]).map((s) => ({
+    headline: s.headline,
+    body_text: s.body_text,
+    position: s.position,
+  }));
+
   // Generate AI backgrounds for all slides (Imagen 4)
   let aiBackgrounds = new Map<number, GeneratedImage>();
   try {
     const imagenService = getImagenService();
-    console.log(`[renderer] Generating AI backgrounds for ${totalSlides} slides...`);
-    aiBackgrounds = await imagenService.generateCarouselBackgrounds(theme, templateType, totalSlides);
+    console.log(`[renderer] Generating AI backgrounds for ${totalSlides} slides with per-slide context...`);
+    aiBackgrounds = await imagenService.generateCarouselBackgrounds(theme, templateType, totalSlides, slideContexts);
     console.log(`[renderer] AI backgrounds generated: ${aiBackgrounds.size}/${totalSlides}`);
   } catch (err) {
     console.warn(`[renderer] AI background generation failed, using solid colors:`, (err as Error).message);
@@ -795,14 +802,21 @@ export async function renderSingleSlide(
     format: 'square',
   };
 
-  // Generate AI background for this slide
+  // Generate AI background for this slide with its specific text context
+  const slideData = slide as SlideData;
+  const slideContext: SlideContext = {
+    headline: slideData.headline,
+    body_text: slideData.body_text,
+    position: slideData.position,
+  };
+
   let aiBg: GeneratedImage | null = null;
   try {
     const imagenService = getImagenService();
     let slideRole: 'cover' | 'content' | 'cta' = 'content';
     if (position === 1) slideRole = 'cover';
     else if (position === totalSlides) slideRole = 'cta';
-    aiBg = await imagenService.generateSlideBackground(theme, slideRole, templateType, position, totalSlides);
+    aiBg = await imagenService.generateSlideBackground(theme, slideRole, templateType, position, totalSlides, slideContext);
   } catch (err) {
     console.warn(`[renderer] AI background failed for slide ${position}, using solid color:`, (err as Error).message);
   }
