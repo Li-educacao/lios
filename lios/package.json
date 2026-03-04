@@ -1,0 +1,17 @@
+{
+  "name": "carousel-creator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Instagram carousel creator for @lawhander (Climatrônico)",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm -w packages/shared run build && (npm run dev:api & npm run dev:web)",
+    "dev:api": "npm -w apps/api run dev",
+    "dev:web": "npm -w apps/web run dev",
+    "build": "npm -w packages/shared run build && npm -w apps/api run build && npm -w apps/web run build",
+    "lint": "npm -w apps/api run lint && npm -w apps/web run lint"
+  }
+}

@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+/* ============================================================
+   MADE Tommy Font Family
+   Files served from /fonts/ (public/fonts/*.otf)
+   ============================================================ */
+
+@font-face {
+  font-family: 'MADE Tommy ExtraBold';
+  src: url('/fonts/MADETommy-ExtraBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MADE Tommy Medium';
+  src: url('/fonts/MADETommy-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MADE Tommy Regular';
+  src: url('/fonts/MADETommy-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MADE Tommy Bold';
+  src: url('/fonts/MADETommy-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MADE Tommy Light';
+  src: url('/fonts/MADETommy-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   Tailwind v4 Theme — Brand Design Tokens
+   Generates utility classes: bg-brand-*, text-brand-*, etc.
+   ============================================================ */
+
+@theme {
+  /* ── Base colors (Carousel Creator legacy) ── */
+  --color-brand-black: #010101;
+  --color-brand-white: #ffffff;
+  --color-brand-gray: #76777a;
+  --color-brand-blue: #0084c8;
+  --color-brand-blue-dark: #0e4c93;
+
+  /* ── LIOS extended palette ── */
+  --color-lios-black: #010101;
+  --color-lios-surface: #080808;
+  --color-lios-surface-2: #0f0f0f;
+  --color-lios-border: #1a1a1a;
+  --color-lios-white: #ffffff;
+
+  /* Neutrals */
+  --color-lios-gray-200: #c4c5c7;
+  --color-lios-gray-300: #9a9b9e;
+  --color-lios-gray-400: #76777a;
+
+  /* Primary — Blue (Marketing, CTAs) */
+  --color-lios-blue: #0084c8;
+  --color-lios-blue-dark: #0e4c93;
+
+  /* Secondary — Green (Pedagógico) */
+  --color-lios-green: #00b37e;
+  --color-lios-green-dark: #00875f;
+
+  /* Status */
+  --color-lios-red: #e03d3d;
+  --color-lios-amber: #e08c00;
+
+  /* ── Typography ── */
+  --font-heading: 'MADE Tommy ExtraBold', sans-serif;
+  --font-heading-bold: 'MADE Tommy Bold', sans-serif;
+  --font-subtitle: 'MADE Tommy Medium', sans-serif;
+  --font-body: 'MADE Tommy Regular', 'Inter', sans-serif;
+  --font-caption: 'MADE Tommy Light', sans-serif;
+
+  /* ── Border radius ── */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+}
+
+/* ============================================================
+   Base styles
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #010101;
+  color: #ffffff;
+  font-family: 'MADE Tommy Regular', 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   Utility classes for typography
+   ============================================================ */
+
+.font-heading {
+  font-family: 'MADE Tommy ExtraBold', sans-serif;
+}
+
+.font-subtitle {
+  font-family: 'MADE Tommy Medium', sans-serif;
+}
+
+.font-body {
+  font-family: 'MADE Tommy Regular', sans-serif;
+}
+
+.font-heading-bold {
+  font-family: 'MADE Tommy Bold', sans-serif;
+}
+
+.font-caption {
+  font-family: 'MADE Tommy Light', sans-serif;
+}
+
+/* ============================================================
+   LIOS utility classes
+   ============================================================ */
+
+/* Sector-aware active nav states */
+.nav-active-marketing {
+  background-color: rgba(0, 132, 200, 0.12);
+  color: var(--color-lios-blue);
+}
+
+.nav-active-pedagogico {
+  background-color: rgba(0, 179, 126, 0.12);
+  color: var(--color-lios-green);
+}
+
+/* Grid pattern for hero background */
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Glassmorphism for decorative hero cards */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
