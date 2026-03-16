@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import socialMediaRouter from '../modules/social-media/index.js';
+import telegramRouter from '../modules/telegram-intelligence/routes.js';
 
 const router = Router();
 
@@ -9,5 +10,8 @@ router.get('/', (_req: Request, res: Response): void => {
 
 // Mount social-media module at v1 (preserves existing /api/v1/carousels, /api/v1/feedback, etc.)
 router.use('/v1', socialMediaRouter);
+
+// Mount telegram intelligence module
+router.use('/v1/telegram', telegramRouter);
 
 export default router;

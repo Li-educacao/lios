@@ -1,0 +1,5 @@
+telethon>=1.36
+python-dotenv
+supabase
+google-generativeai
+schedule

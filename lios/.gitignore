@@ -37,3 +37,9 @@ coverage/
 fonts/*.woff
 fonts/*.woff2
 .vercel
+
+# Telegram collector
+services/telegram-collector/venv/
+services/telegram-collector/__pycache__/
+services/telegram-collector/lios_collector.session
+services/telegram-collector/.env

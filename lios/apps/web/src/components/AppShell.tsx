@@ -18,6 +18,7 @@ import {
   Menu,
   Settings,
   Lock,
+  Brain,
 } from 'lucide-react';
 
 /* ─── Types ──────────────────────────────────────────────────────────────────── */
@@ -58,6 +59,7 @@ const NAV_GROUPS: NavGroup[] = [
     sector: 'green',
     modules: [
       { label: 'Cursos', path: '/app/cursos', icon: <BookOpen size={18} />, comingSoon: true },
+      { label: 'Inteligência Telegram', path: '/app/alunos/inteligencia', icon: <Brain size={18} />, permission: 'pedagogico:read' },
       { label: 'Alunos', path: '/app/alunos', icon: <Users size={18} />, comingSoon: true },
       { label: 'Conteúdo', path: '/app/conteudo', icon: <FileText size={18} />, comingSoon: true },
       { label: 'Relatórios', path: '/app/pedagogico/relatorios', icon: <BarChart3 size={18} />, comingSoon: true },
@@ -177,9 +179,10 @@ function Breadcrumb({ pathname }: { pathname: string }) {
     'criativos': { label: 'Criativos', color: 'text-lios-blue' },
     'midias': { label: 'Mídias', color: 'text-lios-blue' },
     'metricas': { label: 'Métricas', color: 'text-lios-blue' },
-    'cursos': { label: 'Cursos', color: 'text-lios-green' },
-    'alunos': { label: 'Alunos', color: 'text-lios-green' },
-    'conteudo': { label: 'Conteúdo', color: 'text-lios-green' },
+    'cursos':        { label: 'Cursos', color: 'text-lios-green' },
+    'alunos':        { label: 'Alunos', color: 'text-lios-green' },
+    'inteligencia':  { label: 'Inteligência Telegram', color: 'text-lios-green' },
+    'conteudo':      { label: 'Conteúdo', color: 'text-lios-green' },
     'admin': { label: 'Admin' },
   };
 

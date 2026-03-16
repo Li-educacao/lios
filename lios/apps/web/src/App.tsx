@@ -10,6 +10,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ComingSoonPage from './pages/ComingSoonPage';
 import { socialMediaRoutes } from './modules/social-media/routes';
+import { telegramIntelligenceRoutes } from './modules/telegram-intelligence/routes';
 
 function LoadingScreen() {
   return (
@@ -70,7 +71,13 @@ function AppRoutes() {
           <Route path="metricas" element={<ComingSoonPage moduleName="Métricas" />} />
           <Route path="marketing/relatorios" element={<ComingSoonPage moduleName="Relatórios de Marketing" />} />
           <Route path="cursos" element={<ComingSoonPage moduleName="Cursos" />} />
+
+          {/* Telegram Intelligence module */}
+          <Route path="alunos/inteligencia">
+            {telegramIntelligenceRoutes}
+          </Route>
           <Route path="alunos" element={<ComingSoonPage moduleName="Alunos" />} />
+
           <Route path="conteudo" element={<ComingSoonPage moduleName="Conteúdo" />} />
           <Route path="pedagogico/relatorios" element={<ComingSoonPage moduleName="Relatórios Pedagógicos" />} />
 
