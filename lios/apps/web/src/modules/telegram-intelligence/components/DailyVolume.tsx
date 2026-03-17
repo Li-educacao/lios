@@ -8,7 +8,7 @@ interface DailyVolumeProps {
 }
 
 export function DailyVolume({ days }: DailyVolumeProps) {
-  if (days.length === 0) return null;
+  if (!days || days.length === 0) return null;
 
   const max = Math.max(...days.map((d) => d.total));
   const totalSupport = days.reduce((s, d) => s + d.support, 0);
