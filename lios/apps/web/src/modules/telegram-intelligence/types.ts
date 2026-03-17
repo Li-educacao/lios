@@ -104,6 +104,11 @@ export interface TgMetricsDefect {
   count: number;
 }
 
+export interface TgMetricsBrandDefect {
+  brand: string;
+  count: number;
+}
+
 export interface TgMetricsResponseTime {
   support_first_pct: number;
   group_first_pct: number;
@@ -114,6 +119,7 @@ export interface TgMetrics {
   sla: TgMetricsSLA;
   engagement: TgMetricsEngagement;
   top_defects: TgMetricsDefect[];
+  top_brand_defects: TgMetricsBrandDefect[];
   response_time: TgMetricsResponseTime;
 }
 

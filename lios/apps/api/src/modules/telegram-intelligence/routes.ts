@@ -151,6 +151,16 @@ router.get('/metrics', async (_req, res: Response): Promise<void> => {
       { name: 'IPM em Curto', count: 37 },
       { name: 'Trilha Aberta/Rompida', count: 36 },
     ],
+    top_brand_defects: [
+      { brand: 'Samsung', count: 214 },
+      { brand: 'LG', count: 178 },
+      { brand: 'Midea/Springer', count: 143 },
+      { brand: 'Consul/Brastemp', count: 112 },
+      { brand: 'Electrolux', count: 89 },
+      { brand: 'Daikin', count: 67 },
+      { brand: 'Fujitsu', count: 52 },
+      { brand: 'Gree', count: 41 },
+    ],
     response_time: {
       support_first_pct: 54,
       group_first_pct: 46,

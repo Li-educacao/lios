@@ -10,6 +10,7 @@ import { CategoryFilter } from '../components/CategoryFilter';
 import { SLACard } from '../components/SLACard';
 import { EngagementTiers } from '../components/EngagementTiers';
 import { TopDefects } from '../components/TopDefects';
+import { TopBrandDefects } from '../components/TopBrandDefects';
 import type { TgStats, TgMetrics, InsightCategory, TgGroup, TgInsight } from '../types';
 import { CATEGORY_LABELS } from '../types';
 
@@ -196,14 +197,16 @@ export default function IntelligenceDashboard() {
         {(metricsLoading || metrics) && (
           <section className="mb-10">
             {metricsLoading ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div className="rounded-xl border border-lios-border bg-lios-surface h-52 animate-pulse" />
                 <div className="rounded-xl border border-lios-border bg-lios-surface h-52 animate-pulse" />
                 <div className="rounded-xl border border-lios-border bg-lios-surface h-52 animate-pulse" />
               </div>
             ) : metrics ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <EngagementTiers engagement={metrics.engagement} />
                 <TopDefects defects={metrics.top_defects} />
+                <TopBrandDefects brands={metrics.top_brand_defects} />
               </div>
             ) : null}
           </section>
