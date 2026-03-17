@@ -11,6 +11,7 @@ import { SLACard } from '../components/SLACard';
 import { EngagementTiers } from '../components/EngagementTiers';
 import { TopDefects } from '../components/TopDefects';
 import { TopBrandDefects } from '../components/TopBrandDefects';
+import { DailyVolume } from '../components/DailyVolume';
 import type { TgStats, TgMetrics, InsightCategory, TgGroup, TgInsight } from '../types';
 import { CATEGORY_LABELS } from '../types';
 
@@ -157,6 +158,15 @@ export default function IntelligenceDashboard() {
           <div className="rounded-xl border border-lios-border bg-lios-surface p-6 mb-6 h-48 animate-pulse" />
         ) : metrics ? (
           <SLACard sla={metrics.sla} responseTime={metrics.response_time} />
+        ) : null}
+
+        {/* Daily volume */}
+        {metricsLoading ? (
+          <div className="rounded-xl border border-lios-border bg-lios-surface p-6 mb-6 h-52 animate-pulse" />
+        ) : metrics?.daily_volume && metrics.daily_volume.length > 0 ? (
+          <div className="mb-6">
+            <DailyVolume days={metrics.daily_volume} />
+          </div>
         ) : null}
 
         {/* Groups section */}

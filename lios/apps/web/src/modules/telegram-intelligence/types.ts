@@ -115,12 +115,21 @@ export interface TgMetricsResponseTime {
   total_responses: number;
 }
 
+export interface TgDailyVolume {
+  date: string;
+  weekday: string;
+  total: number;
+  support: number;
+  community: number;
+}
+
 export interface TgMetrics {
   sla: TgMetricsSLA;
   engagement: TgMetricsEngagement;
   top_defects: TgMetricsDefect[];
   top_brand_defects: TgMetricsBrandDefect[];
   response_time: TgMetricsResponseTime;
+  daily_volume: TgDailyVolume[];
 }
 
 // ─── Insight categories (match DB CHECK constraint) ──────────────────────────

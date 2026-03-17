@@ -62,13 +62,20 @@ def fetch_all_messages(sb, group_id):
 def is_support(msg):
     """Check if message sender is support staff (Waldeir).
 
-    Waldeir posts primarily as channel admin (telegram_id=NULL) or with his
-    personal account. Also catches secondary support accounts.
+    Waldeir posts as channel admin in multiple ways:
+    - sender_name="Prof. Waldeir (Suporte)" with telegram_id=NULL (older messages)
+    - sender_name=None with telegram_id=None (newer messages, anonymous admin)
+    - sender_name="Suporte - Eletrônica Para Climatização" (secondary account)
+    - Personal account with telegram_id=7052154409 (rare)
+
+    Rule: ANY message with NULL telegram_id = channel admin = Waldeir
+    (he is the only admin who posts in these groups)
     """
     name = msg.get("sender_name") or ""
     tid = msg.get("sender_telegram_id")
 
     # NULL telegram_id = channel admin = Waldeir (only admin in these groups)
+    # This catches both named ("Prof. Waldeir") and anonymous (None) admin posts
     if tid is None:
         return True
 

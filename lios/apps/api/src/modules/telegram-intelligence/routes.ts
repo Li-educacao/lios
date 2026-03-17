@@ -121,11 +121,56 @@ router.get('/insights', async (req, res: Response): Promise<void> => {
   res.json({ data: data || [], total: data?.length || 0 });
 });
 
+// Helper: classify a message sender as support (Waldeir) or community
+function isSupportSender(senderTelegramId: number | null): boolean {
+  // NULL telegram_id = channel admin = Waldeir (only admin in these groups)
+  // 7052154409 = Waldeir's personal account (rare)
+  return senderTelegramId === null || senderTelegramId === 7052154409;
+}
+
 // GET /api/v1/telegram/metrics — aggregated SLA, engagement, defects, response time
-// Values computed from analyze_responses.py on 28,588 messages (6-month dataset)
-// Analysis: topic-aware student-message→response pairing (Telegram Forum threads)
-// Last run: 2026-03-17 — 13,481 response pairs analyzed across both groups
-router.get('/metrics', async (_req, res: Response): Promise<void> => {
+// Static values computed from analyze_responses.py (13,481 Q&A pairs)
+// daily_volume is computed live from tg_messages (last 14 days)
+router.get('/metrics', async (req, res: Response): Promise<void> => {
+  const authReq = req as AuthenticatedRequest;
+  const sb = createSupabaseClient(authReq.token);
+
+  // Fetch last 14 days of messages for daily volume (live data)
+  const cutoff = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
+  const { data: recentMsgs } = await sb
+    .from('tg_messages')
+    .select('sender_telegram_id, sender_name, sent_at')
+    .gte('sent_at', cutoff)
+    .order('sent_at');
+
+  const WEEKDAYS: Record<number, string> = {
+    0: 'Dom', 1: 'Seg', 2: 'Ter', 3: 'Qua', 4: 'Qui', 5: 'Sex', 6: 'Sáb',
+  };
+
+  const dayMap = new Map<string, { total: number; support: number; community: number }>();
+  for (const msg of recentMsgs || []) {
+    const d = new Date(msg.sent_at);
+    const dateKey = d.toISOString().slice(0, 10);
+    if (!dayMap.has(dateKey)) {
+      dayMap.set(dateKey, { total: 0, support: 0, community: 0 });
+    }
+    const entry = dayMap.get(dateKey)!;
+    entry.total++;
+    if (isSupportSender(msg.sender_telegram_id)) {
+      entry.support++;
+    } else {
+      entry.community++;
+    }
+  }
+
+  const dailyVolume = Array.from(dayMap.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, counts]) => ({
+      date,
+      weekday: WEEKDAYS[new Date(date + 'T12:00:00Z').getUTCDay()],
+      ...counts,
+    }));
+
   res.json({
     sla: {
       promised: '24h úteis (seg-sex)',
@@ -168,6 +213,7 @@ router.get('/metrics', async (_req, res: Response): Promise<void> => {
       group_first_pct: 29,
       total_responses: 13481,
     },
+    daily_volume: dailyVolume,
   });
 });
 
