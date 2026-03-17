@@ -8,7 +8,7 @@ interface TopDefectsProps {
 }
 
 export function TopDefects({ defects }: TopDefectsProps) {
-  if (defects.length === 0) return null;
+  if (!defects || defects.length === 0) return null;
 
   const max = defects[0].count;
 

@@ -8,7 +8,7 @@ interface TopBrandDefectsProps {
 }
 
 export function TopBrandDefects({ brands }: TopBrandDefectsProps) {
-  if (brands.length === 0) return null;
+  if (!brands || brands.length === 0) return null;
 
   const max = brands[0].count;
 
