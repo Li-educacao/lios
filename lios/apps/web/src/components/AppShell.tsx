@@ -60,7 +60,7 @@ const NAV_GROUPS: NavGroup[] = [
     modules: [
       { label: 'Cursos', path: '/app/cursos', icon: <BookOpen size={18} />, comingSoon: true },
       { label: 'Inteligência Telegram', path: '/app/alunos/inteligencia', icon: <Brain size={18} />, permission: 'pedagogico:read' },
-      { label: 'Alunos', path: '/app/alunos', icon: <Users size={18} />, comingSoon: true },
+      { label: 'Alunos', path: '/app/pedagogico', icon: <Users size={18} />, permission: 'pedagogico:read' },
       { label: 'Conteúdo', path: '/app/conteudo', icon: <FileText size={18} />, comingSoon: true },
       { label: 'Relatórios', path: '/app/pedagogico/relatorios', icon: <BarChart3 size={18} />, comingSoon: true },
     ],
@@ -180,7 +180,9 @@ function Breadcrumb({ pathname }: { pathname: string }) {
     'midias': { label: 'Mídias', color: 'text-lios-blue' },
     'metricas': { label: 'Métricas', color: 'text-lios-blue' },
     'cursos':        { label: 'Cursos', color: 'text-lios-green' },
+    'pedagogico':    { label: 'Pedagógico', color: 'text-lios-green' },
     'alunos':        { label: 'Alunos', color: 'text-lios-green' },
+    'turmas':        { label: 'Turmas', color: 'text-lios-green' },
     'inteligencia':  { label: 'Inteligência Telegram', color: 'text-lios-green' },
     'conteudo':      { label: 'Conteúdo', color: 'text-lios-green' },
     'admin': { label: 'Admin' },
