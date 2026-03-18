@@ -121,6 +121,8 @@ export interface TgDailyVolume {
   total: number;
   support: number;
   community: number;
+  questions: number;
+  responses: number;
 }
 
 export interface TgMetrics {

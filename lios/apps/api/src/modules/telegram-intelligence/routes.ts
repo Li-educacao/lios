@@ -128,12 +128,32 @@ function isSupportSender(senderTelegramId: number | null): boolean {
   return senderTelegramId === null || senderTelegramId === 7052154409;
 }
 
+// Acknowledgment words — short messages matching these are not real questions
+const ACK_WORDS = new Set([
+  'ok', 'obrigado', 'obg', 'vlw', 'valeu', 'entendi', 'certo',
+  'sim', 'não', 'top', 'show', 'boa', 'blz', 'beleza', 'tmj',
+]);
+
+// Helper: classify a message as a student question (substantive non-support message)
+function isStudentQuestion(msg: { sender_telegram_id: number | null; message_text: string | null; message_type: string }): boolean {
+  if (isSupportSender(msg.sender_telegram_id)) return false;
+  const msgType = msg.message_type || '';
+  if (['sticker', 'forward', 'poll'].includes(msgType)) return false;
+  if (msgType === 'text') {
+    const text = (msg.message_text || '').trim();
+    if (text.length < 3) return false;
+    if (ACK_WORDS.has(text.toLowerCase().replace(/[.!,]+$/, ''))) return false;
+    return true;
+  }
+  // Photos, voice, video, documents — students send board photos, voice questions
+  return ['photo', 'voice', 'video', 'document'].includes(msgType);
+}
+
 // GET /api/v1/telegram/metrics — aggregated SLA, engagement, defects, response time
-// Static values computed from analyze_responses.py (13,481 Q&A pairs)
-// daily_volume is computed live from tg_messages (last 14 days)
+// SLA/engagement/defects from analyze_responses.py (17,182 Q&A pairs, recalculated 2026-03-17)
+// daily_volume computed live from tg_messages (last 14 days) split into questions vs responses
 router.get('/metrics', async (req, res: Response): Promise<void> => {
-  // Compute daily_volume from live DB data (best-effort, won't break if query fails)
-  let dailyVolume: Array<{ date: string; weekday: string; total: number; support: number; community: number }> = [];
+  let dailyVolume: Array<{ date: string; weekday: string; total: number; support: number; community: number; questions: number; responses: number }> = [];
 
   try {
     const authReq = req as AuthenticatedRequest;
@@ -142,7 +162,7 @@ router.get('/metrics', async (req, res: Response): Promise<void> => {
     const cutoff = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
     const { data: recentMsgs } = await sb
       .from('tg_messages')
-      .select('sender_telegram_id, sent_at')
+      .select('sender_telegram_id, sender_name, message_text, message_type, sent_at')
       .gte('sent_at', cutoff)
       .order('sent_at')
       .limit(5000);
@@ -151,19 +171,23 @@ router.get('/metrics', async (req, res: Response): Promise<void> => {
       0: 'Dom', 1: 'Seg', 2: 'Ter', 3: 'Qua', 4: 'Qui', 5: 'Sex', 6: 'Sáb',
     };
 
-    const dayMap = new Map<string, { total: number; support: number; community: number }>();
+    const dayMap = new Map<string, { total: number; support: number; community: number; questions: number; responses: number }>();
     for (const msg of recentMsgs || []) {
       const d = new Date(msg.sent_at);
       const dateKey = d.toISOString().slice(0, 10);
       if (!dayMap.has(dateKey)) {
-        dayMap.set(dateKey, { total: 0, support: 0, community: 0 });
+        dayMap.set(dateKey, { total: 0, support: 0, community: 0, questions: 0, responses: 0 });
       }
       const entry = dayMap.get(dateKey)!;
       entry.total++;
       if (isSupportSender(msg.sender_telegram_id)) {
         entry.support++;
+        entry.responses++;
       } else {
         entry.community++;
+        if (isStudentQuestion(msg)) {
+          entry.questions++;
+        }
       }
     }
 
@@ -181,12 +205,13 @@ router.get('/metrics', async (req, res: Response): Promise<void> => {
   res.json({
     sla: {
       promised: '24h úteis (seg-sex)',
+      // Weighted averages from both groups (Start n=9073 + Expert n=830)
       support_weekday_median_min: 31,
-      support_weekend_median_min: 293,
-      group_weekday_median_min: 33,
-      group_weekend_median_min: 128,
+      support_weekend_median_min: 300,
+      group_weekday_median_min: 34,
+      group_weekend_median_min: 130,
       support_commercial_median_min: 32,
-      group_commercial_median_min: 30,
+      group_commercial_median_min: 31,
     },
     engagement: {
       total_participants: 346,
@@ -218,7 +243,7 @@ router.get('/metrics', async (req, res: Response): Promise<void> => {
     response_time: {
       support_first_pct: 71,
       group_first_pct: 29,
-      total_responses: 13481,
+      total_responses: 13664,
     },
     daily_volume: dailyVolume,
   });

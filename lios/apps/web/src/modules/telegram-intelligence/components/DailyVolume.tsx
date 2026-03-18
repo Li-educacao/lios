@@ -10,95 +10,129 @@ interface DailyVolumeProps {
 export function DailyVolume({ days }: DailyVolumeProps) {
   if (!days || days.length === 0) return null;
 
-  const max = Math.max(...days.map((d) => d.total));
-  const totalSupport = days.reduce((s, d) => s + d.support, 0);
-  const totalCommunity = days.reduce((s, d) => s + d.community, 0);
-  const totalMsgs = totalSupport + totalCommunity;
+  const totalQuestions = days.reduce((s, d) => s + d.questions, 0);
+  const totalResponses = days.reduce((s, d) => s + d.responses, 0);
+  const totalMsgs = days.reduce((s, d) => s + d.total, 0);
   const avgPerDay = Math.round(totalMsgs / days.length);
-  const avgSupportPerDay = Math.round(totalSupport / days.length);
+  const avgQuestionsPerDay = Math.round(totalQuestions / days.length);
+  const avgResponsesPerDay = Math.round(totalResponses / days.length);
+  const maxQuestions = Math.max(...days.map((d) => d.questions), 1);
+  const maxResponses = Math.max(...days.map((d) => d.responses), 1);
 
   return (
-    <div className="rounded-xl border border-lios-border bg-lios-surface p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <BarChart3 size={16} className="text-lios-blue shrink-0" />
-          <h3 className="text-base font-subtitle text-white">Volume Diário</h3>
-          <span className="text-xs font-body text-lios-gray-400">({days.length} dias)</span>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* Questions chart */}
+      <div className="rounded-xl border border-lios-border bg-lios-surface p-6">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2">
+            <BarChart3 size={16} className="text-lios-green shrink-0" />
+            <h3 className="text-base font-subtitle text-white">Perguntas dos Alunos</h3>
+            <span className="text-xs font-body text-lios-gray-400">({days.length} dias)</span>
+          </div>
+          <div className="flex items-center gap-4 text-xs font-body">
+            <span className="text-lios-gray-400">
+              Média: <span className="text-white font-subtitle">{avgQuestionsPerDay}</span>/dia
+            </span>
+            <span className="text-lios-gray-400">
+              Total: <span className="text-lios-green font-subtitle">{totalQuestions}</span>
+            </span>
+          </div>
         </div>
-        <div className="flex items-center gap-4 text-xs font-body">
-          <span className="text-lios-gray-400">
-            Média: <span className="text-white font-subtitle">{avgPerDay}</span> msgs/dia
-          </span>
-          <span className="text-lios-gray-400">
-            Suporte: <span className="text-white font-subtitle">{avgSupportPerDay}</span>/dia
-          </span>
-        </div>
-      </div>
 
-      {/* Stacked bar chart */}
-      <div className="flex items-end gap-1.5" style={{ height: 140 }}>
-        {days.map((day) => {
-          const totalPct = max > 0 ? (day.total / max) * 100 : 0;
-          const supportPct = day.total > 0 ? (day.support / day.total) * 100 : 0;
-          const isWeekend = day.weekday === 'Sáb' || day.weekday === 'Dom';
+        <div className="flex items-end gap-1.5" style={{ height: 120 }}>
+          {days.map((day) => {
+            const pct = maxQuestions > 0 ? (day.questions / maxQuestions) * 100 : 0;
+            const isWeekend = day.weekday === 'Sáb' || day.weekday === 'Dom';
 
-          return (
-            <div
-              key={day.date}
-              className="flex-1 flex flex-col items-center gap-1 group"
-              title={`${day.date} (${day.weekday})\nTotal: ${day.total}\nSuporte: ${day.support}\nComunidade: ${day.community}`}
-            >
-              {/* Count label on hover */}
-              <span className="text-[10px] font-subtitle text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                {day.total}
-              </span>
-
-              {/* Stacked bar */}
+            return (
               <div
-                className="w-full rounded-t-sm overflow-hidden flex flex-col-reverse"
-                style={{ height: `${Math.max(totalPct, 2)}%` }}
+                key={day.date}
+                className="flex-1 flex flex-col items-center gap-1 group"
+                title={`${day.date} (${day.weekday})\nPerguntas: ${day.questions}\nTotal msgs: ${day.total}`}
               >
-                {/* Community (top) */}
+                <span className="text-[10px] font-subtitle text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                  {day.questions}
+                </span>
                 <div
-                  className="w-full bg-lios-gray-600 transition-all"
-                  style={{ height: `${100 - supportPct}%` }}
+                  className="w-full rounded-t-sm bg-lios-green transition-all"
+                  style={{ height: `${Math.max(pct, 2)}%` }}
                 />
-                {/* Support (bottom) */}
-                <div
-                  className="w-full bg-lios-blue transition-all"
-                  style={{ height: `${supportPct}%` }}
-                />
+                <span
+                  className={`text-[10px] font-body ${
+                    isWeekend ? 'text-lios-gray-600' : 'text-lios-gray-400'
+                  }`}
+                >
+                  {day.weekday}
+                </span>
+                <span className="text-[9px] font-body text-lios-gray-600">
+                  {day.date.slice(5)}
+                </span>
               </div>
-
-              {/* Day label */}
-              <span
-                className={`text-[10px] font-body ${
-                  isWeekend ? 'text-lios-gray-600' : 'text-lios-gray-400'
-                }`}
-              >
-                {day.weekday}
-              </span>
-              <span className="text-[9px] font-body text-lios-gray-600">
-                {day.date.slice(5)}
-              </span>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
-      {/* Legend */}
-      <div className="flex items-center gap-4 mt-4 pt-3 border-t border-lios-border">
-        <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-sm bg-lios-blue" />
-          <span className="text-xs font-body text-lios-gray-400">
-            Suporte ({totalSupport})
-          </span>
+      {/* Responses chart */}
+      <div className="rounded-xl border border-lios-border bg-lios-surface p-6">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2">
+            <BarChart3 size={16} className="text-lios-blue shrink-0" />
+            <h3 className="text-base font-subtitle text-white">Respostas do Suporte</h3>
+            <span className="text-xs font-body text-lios-gray-400">({days.length} dias)</span>
+          </div>
+          <div className="flex items-center gap-4 text-xs font-body">
+            <span className="text-lios-gray-400">
+              Média: <span className="text-white font-subtitle">{avgResponsesPerDay}</span>/dia
+            </span>
+            <span className="text-lios-gray-400">
+              Total: <span className="text-lios-blue font-subtitle">{totalResponses}</span>
+            </span>
+          </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-sm bg-lios-gray-600" />
+
+        <div className="flex items-end gap-1.5" style={{ height: 120 }}>
+          {days.map((day) => {
+            const pct = maxResponses > 0 ? (day.responses / maxResponses) * 100 : 0;
+            const isWeekend = day.weekday === 'Sáb' || day.weekday === 'Dom';
+
+            return (
+              <div
+                key={day.date}
+                className="flex-1 flex flex-col items-center gap-1 group"
+                title={`${day.date} (${day.weekday})\nRespostas: ${day.responses}\nTotal msgs: ${day.total}`}
+              >
+                <span className="text-[10px] font-subtitle text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                  {day.responses}
+                </span>
+                <div
+                  className="w-full rounded-t-sm bg-lios-blue transition-all"
+                  style={{ height: `${Math.max(pct, 2)}%` }}
+                />
+                <span
+                  className={`text-[10px] font-body ${
+                    isWeekend ? 'text-lios-gray-600' : 'text-lios-gray-400'
+                  }`}
+                >
+                  {day.weekday}
+                </span>
+                <span className="text-[9px] font-body text-lios-gray-600">
+                  {day.date.slice(5)}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Summary footer */}
+        <div className="flex items-center gap-4 mt-4 pt-3 border-t border-lios-border">
           <span className="text-xs font-body text-lios-gray-400">
-            Comunidade ({totalCommunity})
+            Média geral: <span className="text-white font-subtitle">{avgPerDay}</span> msgs/dia
+          </span>
+          <span className="text-xs font-body text-lios-gray-400">
+            Taxa resposta: <span className="text-white font-subtitle">
+              {totalQuestions > 0 ? Math.round((totalResponses / totalQuestions) * 100) : 0}%
+            </span>
           </span>
         </div>
       </div>

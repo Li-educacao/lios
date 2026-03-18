@@ -198,6 +198,10 @@ def _build_row(group_id: str, message: Any) -> dict[str, Any] | None:
         last = getattr(message.sender, "last_name", "") or ""
         sender_name = f"{first} {last}".strip() or getattr(message.sender, "title", None)
 
+    # Admin posts (channel messages) have no sender — Waldeir is the only admin
+    if sender_name is None and _sender_id(message) is None:
+        sender_name = "Prof. Waldeir (Suporte)"
+
     # Forward info as text
     fwd_text = None
     if message.fwd_from:
