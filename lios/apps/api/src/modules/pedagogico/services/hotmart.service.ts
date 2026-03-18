@@ -34,8 +34,12 @@ export interface HotmartWebhookPayload {
       transaction?: string;
       order_date?: string;
       approved_date?: string;
+      warranty_expire_date?: number;
       price?: { value?: number };
       payment?: { type?: string };
+      offer?: { payment_mode?: string; code?: string };
+      is_subscription?: boolean;
+      recurrency_number?: number;
       status?: string;
     };
     product?: {
@@ -77,6 +81,15 @@ export const hotmartService = {
     const purchase = data?.purchase;
     const product = data?.product;
 
+    // Calculate access_until from warranty_expire_date
+    let accessUntil: string | null = null;
+    let daysRemaining: number | null = null;
+    if (purchase?.warranty_expire_date) {
+      const d = new Date(purchase.warranty_expire_date);
+      accessUntil = d.toISOString().split('T')[0];
+      daysRemaining = Math.ceil((d.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+    }
+
     return {
       event,
       buyerName: buyer?.name?.trim() || '',
@@ -89,6 +102,11 @@ export const hotmartService = {
       paymentMethod: purchase?.payment?.type || null,
       productId: product?.id ? String(product.id) : null,
       productName: product?.name || null,
+      accessUntil,
+      daysRemaining,
+      isSubscription: purchase?.is_subscription ?? false,
+      paymentMode: purchase?.offer?.payment_mode || null,
+      recurrencyNumber: purchase?.recurrency_number ?? null,
     };
   },
 
@@ -138,6 +156,11 @@ export const hotmartService = {
             cpf: parsed.buyerCpf,
             hotmartBuyerEmail: parsed.buyerEmail,
             metadata: payload.data,
+            accessUntil: parsed.accessUntil,
+            daysRemaining: parsed.daysRemaining,
+            isSubscription: parsed.isSubscription,
+            paymentMode: parsed.paymentMode,
+            recurrencyNumber: parsed.recurrencyNumber,
           });
           studentId = student.id;
           addStep('upsert_student', 'success', { studentId });
