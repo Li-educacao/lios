@@ -26,7 +26,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     query = query.eq('status', status);
   }
 
-  const { data, error } = await query.order('created_at', { ascending: false });
+  const { data, error } = await query.order('start_date', { ascending: true, nullsFirst: true });
 
   if (error) {
     res.status(500).json({ error: { message: error.message, code: 'QUERY_ERROR' } });
