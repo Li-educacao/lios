@@ -15,5 +15,6 @@ export const config = {
   supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
   geminiApiKey: process.env.GEMINI_API_KEY || '',
+  hotmartWebhookSecret: process.env.HOTMART_WEBHOOK_SECRET || '',
   isDev: process.env.NODE_ENV !== 'production',
 } as const;
